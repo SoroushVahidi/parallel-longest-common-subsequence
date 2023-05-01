@@ -44,21 +44,21 @@ string1="aedfhr";
 //correct
 //string2="abba";
 //string1="baab";
-//correct
+//correct ans="ab"
 //string2="aabbccbbaa";
 //string1="abcb";
-//correct
+//correct ans="abcb"
 //string2="abbababbbba";
 //string1="bbaaaabba";
-//wrong
+//correct ans="bbaabba";
 //string2="bcdaacd";
 //string1="acdbac";
 //correct ans="cdac"
 //string1="abcadb";
 //string2="bfdb";
 //correct; ans="bdb"
-string1="azbzc";
-string2="zq";
+//string1="azbzc";
+//string2="zq";
 //correct; ans="z"
 //string1="adf";
 //string2="h";
@@ -75,7 +75,7 @@ if(string1.size>string2.size){
   string1=u;
   
 }
-const infin:int=30;
+const infin:int=9999;
 const m:int=string1.size;
 const n:int=string2.size;
 var mat:[0..m][0..n] int;
@@ -782,8 +782,6 @@ for i in 0..m-1{
   }
 }
 writeln();
-
-
 //printMatrix(rowdg[0]);
 //test(rowdg[0],rowdg[1],1,2);
 //compute2(dgu,dgl,0,4,0,n-1,mins,4);
