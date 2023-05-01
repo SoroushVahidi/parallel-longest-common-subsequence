@@ -4,29 +4,29 @@ use Math;
 var string1="gatttatgcagg";
 var string2="tcaggatt";
 
-//correct
+//correct ans="tcagg"
 
-//string2="ab";
-//string1="ab";
-//correct
-//string2="abc";
-//string1="ab";
-//correct
-//string2="abc";
-//string1="abc";
-//correct
-//string2="abcd";
-//string1="abcd";
-//correct
-//string2="abcdcdb";
-//string1="abcdbe";
-//correct
-//string2="spaceship";
-//string1="spakehip";
-//correct
-//string2="abcdgh";
-//string1="aedfhr";
-//correct
+string2="ab";
+string1="ab";
+//correct ans=ab
+string2="abc";
+string1="ab";
+//correct  ans="ab"
+string2="abc";
+string1="abc";
+//correct ans="abc"
+string2="abcd";
+string1="abcd";
+//correct ans="abcd"
+string2="abcdcdb";
+string1="abcdbe";
+//correct ans="abcdb"
+string2="spaceship";
+string1="spakehip";
+//correct ans="spaehip"
+string2="abcdgh";
+string1="aedfhr";
+//correct ans="adh"
 //string2="abcdghdr";
 //string1="aedfhrd";
 //correct
@@ -50,25 +50,32 @@ var string2="tcaggatt";
 //correct
 //string2="abbababbbba";
 //string1="bbaaaabba";
-//correct
+//wrong
 //string2="bcdaacd";
 //string1="acdbac";
-//correct
-string1="abcadb";
-string2="bfdb";
-//correct;
+//correct ans="cdac"
+//string1="abcadb";
+//string2="bfdb";
+//correct; ans="bdb"
 string1="azbzc";
 string2="zq";
-//correct;
-string1="adf";
-string2="h";
+//correct; ans="z"
+//string1="adf";
+//string2="h";
+//correct ans=""
+//string2="absdfesccbad";
+//string1="cbdaserthpsd";
+//correct ans="bdesd";
+//string2="bcdsaecvbzasdrf";
+//string2="aazxdcvbsbaxzds";
+//correct ans="cbsd"
 if(string1.size>string2.size){
   var u= string2;
   string2=string1;
   string1=u;
   
 }
-const infin:int=9999;
+const infin:int=30;
 const m:int=string1.size;
 const n:int=string2.size;
 var mat:[0..m][0..n] int;
@@ -87,8 +94,8 @@ forall i in 0..m-1{
 proc printMatrix(matrix) {
   var nn=matrix.size;
   var mm=matrix[matrix.dim(0).low].size;
-  forall i in matrix.dim(0).low..matrix.dim(0).high{
-    forall j in matrix[matrix.dim(0).low].dim(0).low..matrix[matrix.dim(0).low].dim(0).high{
+  for i in matrix.dim(0).low..matrix.dim(0).high{
+    for j in matrix[matrix.dim(0).low].dim(0).low..matrix[matrix.dim(0).low].dim(0).high{
       write(matrix[i][j], " ");
     }
     writeln();
@@ -276,10 +283,10 @@ proc findColMins(dgu,dgl,vertex:int, left: int, right: int, top: int, bottom: in
   //writeln("firstind= ",firstind," midcol= ",midCol," left= ",left," right= ",right," mins index= ",firstind+midCol-left,"  minIndex= ",minIndex," top= ",top," bottom = ",bottom);
   if find_cell(dgu,dgl,vertex,minIndex,midCol)!=infin{
 
-    cobegin{ //Parallel step
+   // cobegin{ //Parallel step
       findColMins(dgu,dgl,vertex:int, left, midCol-1, top, minIndex, mins,firstind); //left submatrix
       findColMins(dgu,dgl,vertex:int, midCol+1, right, minIndex, bottom, mins,firstind+midCol-left+1); //right submatrix
-    }
+  //  }
   }
   else{
     findColMins(dgu,dgl,vertex:int, left, midCol-1, top, bottom, mins,firstind);
@@ -320,8 +327,8 @@ proc compute2(dgu,dgl, left: int, right: int, top: int, bottom: int, mins,x:int)
 //compute2(rowdg[6],rowdg[7],0,1,0,n-1,mins,2);
 //printMatrix(fortwo);
 
-var javab:[0..10][0..n][0..4*m+1] int;
-forall k in 0..10{
+var javab:[0..50][0..n][0..4*m+1] int;
+forall k in 0..50{
   forall i in 0..n{
     forall j in 0..4*m+1{
         javab[k][i][j]=infin;
@@ -330,6 +337,7 @@ forall k in 0..10{
 }
 forall i in 0..m-1{
   var sot=2*i;
+  //printMatrix(rowdg[i]);
   forall j in 0..n{
     javab[0][j][sot]=rowdg[i][j][0];
     javab[0][j][sot+1]=rowdg[i][j][1];
@@ -355,7 +363,8 @@ forall i in 0..m-1{
 }*/
 var nummat=0;
 var lastbre=-1;
-//printMatrix(javab[0]);
+writeln("matrix number 0 :");
+printMatrix(javab[0]);
 proc computedg(left: int, right: int, top: int, bottom: int, mins){ 
   var x=2;
   var intmat=0;
@@ -466,10 +475,10 @@ proc computedg(left: int, right: int, top: int, bottom: int, mins){
     }
     //if(x==4){
     
-    //writeln("matrix number ",intmat," :");
-    //printMatrix(javab[intmat]);
+    writeln("matrix number ",intmat," :");
+    printMatrix(javab[intmat]);
     //}
-   // writeln();
+    writeln();
     x=x*2;
   }
 }
@@ -480,7 +489,7 @@ var ans:[0..3][0..n-1] int;
 //var wshift:[0..1][0..n-1] int;
 
 
-var z=6;
+//var z;
 //test(rowdg[z],rowdg[z+1],2);
 //printMatrix(mins);
 //writeln("test");
@@ -493,10 +502,11 @@ var z=6;
 //for i in 0..n-1{
  // writeln(findMinIndex(rowdg[6],rowdg[7],2,i,0,1));
 //}
-//for z in 0..7{
- // writeln("For rows ",z," and ",z+1,":");
- // raw(rowdg[z],rowdg[z+1],2);
-  //test(rowdg[z],rowdg[z+1],2);
+/*for z in 0..m{
+  writeln("For rows ",z," and ",z+1,":");
+  raw(rowdg[z],rowdg[z+1],2);
+  test(rowdg[z],rowdg[z+1],2);
+}*/
 
  // printMatrix(ans);
  // writeln();
@@ -600,31 +610,33 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
   }
   if topgr==bottomgr{
     cross[topgr]=leftgr;
-    //writeln("kind 0 :  cross[",topgr,"]= ",leftgr);
+  //  writeln("kind 0 :  cross[",topgr,"]= ",leftgr);
     return;
   }
-   var num_of_col= 1<<(max((mat_num-1),0));
+   
   if (leftgr==rightgr)||(breakout==0){
     forall i in topgr+1..bottomgr{
       cross[i]=leftgr;
-      //writeln("for kind 1:  ,leftgr= ",leftgr, " rightgr= ",rightgr,"  topgr = ",topgr, " ", "bottomgr= ",bottomgr, "  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col);
-     // writeln("kind 1 : cross[",i,"]= ",leftgr);
+    //  writeln("for kind 1:  ,leftgr= ",leftgr, " rightgr= ",rightgr,"  topgr = ",topgr, " ", "bottomgr= ",bottomgr, "  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col);
+    //  writeln("kind 1 : cross[",i,"]= ",leftgr);
     }
     return;
   }
   if (breakout==1)&&(bottomgr-topgr==1){
     cross[topgr]=leftgr;
     cross[bottomgr]=javab[0][leftgr][2*topgr+1];
-    //writeln("kind 2 :cross[",topgr,"] = ",leftgr);
-    //writeln("kind 3 :cross[",bottomgr,"] = ",javab[0][leftgr][2*topgr+1]);
+  //  writeln("kind 2 :cross[",topgr,"] = ",leftgr);
+  //  writeln("kind 3 :cross[",bottomgr,"] = ",javab[0][leftgr][2*topgr+1]);
     //if(bottomgr==4 && javab[0][topgr][2*topgr+1]==8){
-      //  writeln("for kind 3:  ,leftgr= ",leftgr," leftmat= ",leftmat, " rightgr= ",rightgr," rightmat =  ",rightmat,"  topgr = ",topgr, " topmat= ",topmat," ", "bottomgr= ",bottomgr, " bottommat= ",bottommat,"  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col);
+    //    writeln("for kind 3:  ,leftgr= ",leftgr," leftmat= ",leftmat, " rightgr= ",rightgr," rightmat =  ",rightmat,"  topgr = ",topgr, " topmat= ",topmat," ", "bottomgr= ",bottomgr, " bottommat= ",bottommat,"  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col);
     //}
     return;
   }
  
   var topmat=0;
   var bottommat=n;
+  var the_related_matrix=logBasePow2(bottomgr-topgr-1,1);
+  var num_of_col= 1<<(the_related_matrix);
   var u=(topgr)/(num_of_col);
   var leftmat= topgr+u;
   var rightmat=leftmat+num_of_col;
@@ -633,14 +645,15 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
   
   var which=-1;
   var dgu:[topmat..bottommat][leftmat..rightmat] int;
+  
   if(mat_num>0){
-    [u in topmat..bottommat][v in leftmat..rightmat]dgu[u][v]=javab[mat_num-1][u][v];
+    [u in topmat..bottommat][v in leftmat..rightmat]dgu[u][v]=javab[the_related_matrix][u][v];
   }
   
   var dgl:[topmat..bottommat][rightmat+1..2*rightmat-leftmat+1]int ;
   //writeln(dgl.dim(0).low," ",dgl.dim(0).high," ",dgl[6].dim(0).low," ",dgl[6].dim(0).high);
   if(mat_num>0){
-      [u in topmat..bottommat][v in rightmat+1..2*rightmat-leftmat+1]dgl[u][v]=javab[mat_num-1][u][v];
+      [u in topmat..bottommat][v in rightmat+1..2*rightmat-leftmat+1]dgl[u][v]=javab[the_related_matrix][u][v];
   }
   
   var a:[0..2*n] int;
@@ -685,23 +698,21 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
           //    writeln("third one passed! i= ",i-leftmat);
            // }
             a[i]=i-leftmat;
-          //  writeln("dgl[dgu[",leftgr,"][",i,"]][",f-i,"]= ",javab[mat_num][leftgr][guess+breakout],")");
+            writeln("dgl[dgu[",leftgr,"][",i,"]][",f-i,"]= ",javab[mat_num][leftgr][breakout],")");
          }
       }
     }
   }
  // if((leftgr==0)&& (midrow==4)){
- /*   writeln("a = ",a);
-    writeln("dgu = ");
-    printMatrix(dgu);
-    writeln();
-    writeln("dgl = ");
-    printMatrix(dgl);
-    writeln();*/
+
     
  // }
   
   which = max reduce a;
+  /*if a[which]==0{
+    which=0;
+  }*/
+  //writeln(a);
   //which=a[which];
   //writeln("which = ",which);
   //begin{
@@ -710,13 +721,20 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
   
       cross[midrow]=dgu[leftgr][which+leftmat];
  // }
-  //writeln("kind 4:  cross [",midrow,"]= ",dgu[leftgr][which+leftmat]);
+  writeln("kind 4:  cross [",midrow,"]= ",dgu[leftgr][which+leftmat]);
   //readLine();
- /* if(midrow==2){
-      writeln("for kind 4 and midrow==2:  ,leftgr= ",leftgr," leftmat= ",leftmat, " rightgr= ",rightgr," rightmat =  ",rightmat,"  topgr = ",topgr, " topmat= ",topmat," ", "bottomgr= ",bottomgr, " bottommat= ",bottommat,"  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col," which= ",which);
+  //if(midrow==2){
+      writeln("for kind 4:  leftgr= ",leftgr," leftmat= ",leftmat, " rightgr= ",rightgr," rightmat =  ",rightmat,"  topgr = ",topgr, " topmat= ",topmat," ", "bottomgr= ",bottomgr, " bottommat= ",bottommat,"  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col," which= ",which);
       writeln();
+    writeln("a = ",a);
+    writeln("dgu = ");
+    printMatrix(dgu);
+    writeln();
+    writeln("dgl = ");
+    printMatrix(dgl);
+    writeln();   
 
-  }*/
+  //}
   //writeln();
   //begin{
    // if mat_num==nummat-1{
@@ -730,7 +748,7 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
       writeln();
     }*/
    // }
-    cobegin{
+   // cobegin{
         cross_finder(leftgr,dgu[leftgr][which+leftmat],topgr,midrow,which,mat_num-1);
    // if mat_num==nummat-1{
     /*cobegin{
@@ -744,7 +762,7 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
     }*/
    // }
       cross_finder(dgu[leftgr][which+leftmat],rightgr,midrow,bottomgr,breakout-which,mat_num-1);
-    }
+  //  }
   }
 
 //}
