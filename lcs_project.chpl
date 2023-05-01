@@ -63,8 +63,8 @@ string2="zq";
 //string1="adf";
 //string2="h";
 //correct ans=""
-//string2="absdfesccbad";
-//string1="cbdaserthpsd";
+string2="absdfesccbad";
+string1="cbdaserthpsd";
 //correct ans="bdesd";
 //string2="bcdsaecvbzasdrf";
 //string2="aazxdcvbsbaxzds";
@@ -363,8 +363,8 @@ forall i in 0..m-1{
 }*/
 var nummat=0;
 var lastbre=-1;
-writeln("matrix number 0 :");
-printMatrix(javab[0]);
+//writeln("matrix number 0 :");
+//printMatrix(javab[0]);
 proc computedg(left: int, right: int, top: int, bottom: int, mins){ 
   var x=2;
   var intmat=0;
@@ -475,10 +475,10 @@ proc computedg(left: int, right: int, top: int, bottom: int, mins){
     }
     //if(x==4){
     
-    writeln("matrix number ",intmat," :");
-    printMatrix(javab[intmat]);
+   // writeln("matrix number ",intmat," :");
+   // printMatrix(javab[intmat]);
     //}
-    writeln();
+   // writeln();
     x=x*2;
   }
 }
@@ -698,7 +698,7 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
           //    writeln("third one passed! i= ",i-leftmat);
            // }
             a[i]=i-leftmat;
-            writeln("dgl[dgu[",leftgr,"][",i,"]][",f-i,"]= ",javab[mat_num][leftgr][breakout],")");
+           // writeln("dgl[dgu[",leftgr,"][",i,"]][",f-i,"]= ",javab[mat_num][leftgr][breakout],")");
          }
       }
     }
@@ -721,7 +721,7 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
   
       cross[midrow]=dgu[leftgr][which+leftmat];
  // }
-  writeln("kind 4:  cross [",midrow,"]= ",dgu[leftgr][which+leftmat]);
+  /*writeln("kind 4:  cross [",midrow,"]= ",dgu[leftgr][which+leftmat]);
   //readLine();
   //if(midrow==2){
       writeln("for kind 4:  leftgr= ",leftgr," leftmat= ",leftmat, " rightgr= ",rightgr," rightmat =  ",rightmat,"  topgr = ",topgr, " topmat= ",topmat," ", "bottomgr= ",bottomgr, " bottommat= ",bottommat,"  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col," which= ",which);
@@ -732,7 +732,7 @@ proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
     writeln();
     writeln("dgl = ");
     printMatrix(dgl);
-    writeln();   
+    writeln(); */  
 
   //}
   //writeln();
