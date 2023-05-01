@@ -69,6 +69,10 @@ string1="cbdaserthpsd";
 //string2="bcdsaecvbzasdrf";
 //string2="aazxdcvbsbaxzds";
 //correct ans="cbsd"
+if(string1.size*string2.size==0){
+  writeln();
+  exit(0);
+}
 if(string1.size>string2.size){
   var u= string2;
   string2=string1;
