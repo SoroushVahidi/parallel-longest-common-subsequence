@@ -2,43 +2,146 @@ use LinearAlgebra;
 use IO;
 use Math;
 use Time;
+use CTypes;
 //below is number of testcases which can change. 
-var numtest=139;
+var numtest=499;
+var timer_prefsum:stopwatch;
+var timer_findminindex:stopwatch;
+var timer_findcolmins:stopwatch;
+var timer_findcell:stopwatch;
+var timer_computedg:stopwatch;
+var timer_crossfinder:stopwatch;
+var timer_findlast:stopwatch;
+
 //below is number of available processors, and number of processors assigned to this program.
-//writeln(here.numPUs());
-//writeln(here.maxTaskPar);
-//var res= open("results.txt", ioMode.cw);
-//var wrt=res.writer();
-//label str for tes in 0..numtest{
-//You can change the below lines to solve only some test cases.
-  //if(tes%200 ==0){
-    //continue str;
-   // writeln(tes);
-  //}
+writeln(here.numPUs());
+writeln(here.maxTaskPar);
+var res= open("results_499_8.txt", ioMode.cw);
 
-  var stm=datetime.now();
+var wrt=res.writer();
+wrt.writeln("here.numPUs() is ",here.numPUs());
+wrt.writeln("here.maxTaslPar is ",here.maxTaskPar);
+var reta:[0..100000] uint(8);
 
-//  var st=tes:string;
- // var fle="".join("test",st,".txt");
+  
+/*proc PeelLCS(lstring1:[?D1] uint(8),lstring2:[?D2] uint(8), retary:[?D3] uint(8) ) :int {
+          //  writeln("injam");
+            var localm:int =D1.size;
+            var localn:int =D2.size;
 
-  //writeln("The name of the file we are reading is ", fle);
- // var f = open(fle, ioMode.r);
-  //var r = f.reader();
+            if (localm==0) || (localn==0) {
+                return 0;
+            }
+            if lstring1[localm-1]==lstring2[localn-1] {
+                var ary1=lstring1[0..localm-2];
+                var ary2=lstring2[0..localn-2];
+                var firstpart=PeelLCS(ary1,ary2,retary);
+                retary[firstpart]=lstring1[localm-1];
+                return firstpart+1;
+            } else {
+                var ary1=lstring1[0..localm-1];
+                var ary2=lstring2[0..localn-2];
+                var ary3=lstring1[0..localm-2];
+                var ary4=lstring2[0..localn-1];
+                var part1=PeelLCS(ary1,ary2,retary);
+                var tmpary=retary;
+                var part2=PeelLCS(ary3,ary4,tmpary);
+                //writeln("part1=",part1,", part2=",part2);
+                if part1 >part2 {
+                     return part1;
+                } else {
+                     retary[0..part2-1]=tmpary[0..part2-1];
+                     return part2;
+                }
+            }
+}*/
+proc sequential(w,z){
+    var a=string.createBorrowingBuffer(c_ptrTo(w), length=w.size, size=w.size);
+    var b=string.createBorrowingBuffer(c_ptrTo(z), length=z.size, size=z.size);
+  var m1=a.size;
+  var n1=b.size;
+  var len:[0..m1][0..n1] int;
+
+  for i in 0..n1-1{
+    if(a[0]==b[i]){
+      len[0][i]=1;
+    }
+  }
+  for i in 0..m1-1{
+    if(b[0]==a[i]){
+      len[i][0]=1;
+    }
+  }
+  for i in 1..m1-1{
+    for j in 1..n1-1{
+      len[i][j]=max(len[i-1][j],len[i][j-1]);
+      if(a[i]==b[j]){
+        len[i][j]=max(len[i][j],1+len[i-1][j-1]);
+        if(len[i][j]==1+len[i-1][j-1]){
+    //      writeln("on ",i," and ",j," updated to ",len[i][j]);
+        }
+
+      }
+    }
+  }
+  var u=m1-1;
+  var v=n1-1;
+
+  
+  var ans:string="";
+  while(1){
+    if((u==0)||(v==0)){
+      if(len[u][v]==1){
+        ans="".join(a[u],ans);
+    //    writeln("u = ",u," v= ",v," ans= ",ans);
+      }
+      break;
+    }
+    if((len[u][v]==len[u-1][v-1]+1)&&(a[u]==b[v])){
+      ans="".join(a[u],ans);
+    //  writeln("u = ",u," v= ",v," ans= ",ans);
+      u=u-1;
+      v=v-1;
+    }
+    else if(len[u][v]==len[u-1][v]){
+      u=u-1;
+    }
+    else if(len[u][v]==len[u][v-1]){
+      v=v-1;
+    }
+  }
+  var u2:[0..ans.size-1] uint(8);
+  for i in 0..ans.size-1{
+    u2[i]=ans.byte(i);
+  }
+  return(u2);
+}
+
   var line:string;
   var nlin=-1;
-  var string1:string;
-  var string2:string;
-   string2="xxxxxxxx1234y";
-   string1="xx12345yyyyyyyyyy";
-  //We are going to find the LCS of string1 and string2. Below is for reading the test cases.
- /* r.readLine(line);
-  string1=line;
-  r.readLine(line);
-  string2=line;
-  while( r.readLine(line) ) {
-  
+  //var string1:string;
+  //var string2:string;
+  var string3="vnrqlrmqpxryvbjhaoeocasjbroomyqhgaabaavvueif";
+  var string4="mdlpnrzyh";
+  //writeln("sequ= ",sequential(string3,string4));
+   var u1:[0..string3.size-1]uint(8);
+  var u2:[0..string4.size-1] uint(8);
+  forall i in 0..string3.size-1{
+    u1[i]=string3.byte(i);
   }
-  f.close();*/
+  //writeln(u1);
+  forall i in 0..string4.size-1{
+    u2[i]=string4.byte(i);
+  }
+ // writeln(u1);
+ // writeln(u2);
+ // writeln(PeelLCS(u1,u2,reta));
+  proc paralcs( a1, a2){
+    var string1=string.createBorrowingBuffer(c_ptrTo(a1), length=a1.size, size=a1.size);
+    var string2=string.createBorrowingBuffer(c_ptrTo(a2), length=a2.size, size=a2.size);
+   
+  //We are going to find the LCS of string1 and string2. Below is for reading the test cases.
+ 
   //writeln("We want to find LCS of ",string1," and ",string2);
 
   //Below are some suggested testcases to test the program.
@@ -149,7 +252,7 @@ var numtest=139;
     string1=u;
   }
 
-  const infin:int=9999;
+  const infin:int=999999;
   const m:int=string1.size;
   const n:int=string2.size;
   var mat:[0..m][0..n] int;
@@ -176,6 +279,7 @@ var numtest=139;
   }
   //Below function finds the prefix sum of its input array.
   proc prefsum(list:[0..n] int){
+   // timer_prefsum.start();
     var exp: int = 1;
     var expm1, expnot: int;
     while (exp < n+1) {
@@ -189,6 +293,7 @@ var numtest=139;
       exp = exp << 1;
     }
     //  writeln(" The prefix sums of the input array for the function prefsum is ",list);
+ //   timer_prefsum.stop();
   }
   //All below code is for computing the 0th and the first breakout of each vertex in row number i and store them in dg[i][0] and dg[i][1]
   var jk:[0..m][0..n] int;
@@ -250,23 +355,29 @@ var numtest=139;
   //The below function computes the leftmost vertex we can reach with a path with weight q from vertex "vertex" if the upper part of the path has weight p.
 
   proc find_cell(dgu,dgl,vertex,p,q){
+ //   timer_findcell.start();
     if p>q{
+   //   timer_findcell.stop();
       return infin;
     }
     //The combination of D_G(U) and D_G(L) is a k*n matrix such that the minima of column j is the index of the num_bre th breakout
 
     if ((p<dgu[0].size)&&(dgu[vertex][p]<n) && (q-p<dgl[0].size)&&(q-p>=0)){
+       
         //dgl[dgu[vertex][p]][q-p] is the leftmost vertex in the down row od dgl we can reach by starting from vertex in the first row of dgu and the weight of the path in dgu is p and in dgl is q-p.
+     //   timer_findcell.stop();
         return dgl[dgu[vertex][p]][q-p];
       //  writeln("i== ",i," j== ",j, "  dgu[j][i]=  ",dgu[j][i],  "  dgl[dgu[j][i]][k-i]= ",dgl[dgu[j][i]][k-i]);
     }
     else{
+     //   timer_findcell.stop();
         return infin;
     }
   }
 
   // Function below finds the index of the minimum element of elements of column "col" between "top" and "bottom" such that "col" is a column of dg.
   proc findMinIndex( dgu,dgl,vertex:int, col: int, top: int, bottom: int) {
+   // timer_findminindex.start();
     //writeln("dgu =",dgu);
     //writeln("dgl =",dgl);
     var listsize = bottom - top + 1;
@@ -298,15 +409,18 @@ var numtest=139;
       exp = exp << 1;
   }
     //writeln("prefix: ", prefix," minIndex: ", minIndex);
+    //timer_findminindex.stop();
     return minIndex[listsize-1]+top;
+    
   }
   var mins:[0..4*(n+1)*(m+1)]int;
   //In the function below, we find the index of the minimum of each column of matrix dg and save them in array "mins" recursively. We find the minimum of the middle column, and find the minimum of each 
   //column left of the middle column which is upper than the min index of the middle column, and we find the min index of each column right of the middle column, which is downer than the min index of the middle column.
   proc findColMins(dgu,dgl,vertex:int, left: int, right: int, top: int, bottom: int, mins,firstind:int) {
-
+  //  timer_findcolmins.start();
     var cols = right - left + 1;//it shows the number of columns of the matrix we want to work with.
     if(cols < 1){
+      
       return;
     }
     //writeln("num =",num,"  left= ", left, "right = ",right);
@@ -317,16 +431,19 @@ var numtest=139;
     mins[firstind+midCol-left] = minIndex;
     //writeln("firstind= ",firstind," midcol= ",midCol," left= ",left," right= ",right," mins index= ",firstind+midCol-left,"  minIndex= ",minIndex," top= ",top," bottom = ",bottom);
     if find_cell(dgu,dgl,vertex,minIndex,midCol)!=infin{
-
+      
       cobegin{ //Parallel step
+        
         findColMins(dgu,dgl,vertex:int, left, midCol-1, top, minIndex, mins,firstind); //left submatrix
         findColMins(dgu,dgl,vertex:int, midCol+1, right, minIndex, bottom, mins,firstind+midCol-left+1); //right submatrix
       }
     }
     else{
+      
       //It means that all of the cells in this column and right columns of it are infinite. We should only find the minimum of the left columns.
       findColMins(dgu,dgl,vertex:int, left, midCol-1, top, bottom, mins,firstind);
     }
+    
   }
 
   //Below is the initialization of matrix "javab". In each iteration that we compute matrices dg, we put them in matrix javab. If we
@@ -357,6 +474,7 @@ var numtest=139;
   //printMatrix(javab[0]);
   // In the below function, in each step, we combine each 2 adjacent matrices(dgu and dgl) to get a dg of them. We do it until 1 matrix remains at last.
   proc computedg(left: int, right: int, top: int, bottom: int, mins){ 
+    timer_computedg.start();
     var x=2;
     var intmat=0;
     while((x)<=2*m-1){
@@ -420,25 +538,28 @@ var numtest=139;
      // printMatrix(javab[intmat]);
       x=x*2;
     }
+    timer_computedg.stop();
   }
 
-  var ans:[0..3][0..n-1] int;
 
   computedg(0,n,0,2,mins);
   // "lastbre" contains the upper bound of the last breakout of the first vertex of the first row.
   lastbre=lastbre/2;
-
+  timer_findcolmins.start();
   forall i in 0..n-1{
     // writeln("for vertex i= ",i);
     // writeln();
+
     findColMins(rowdg[0],rowdg[1],i,0,2,0,1,mins,0);
     // for j in 0..2{
     //  write(mins[i][j]," ");
     // }
     //writeln();
   }
+  timer_findcolmins.stop();
   //The procedure below finds the last breakout for a vertex which is less than infinity. It does it by a binary search.
   proc findlast(){
+    
     var left=0;
     var right=m;
     
@@ -446,6 +567,7 @@ var numtest=139;
       var mid=(left+right)/2;
       //writeln("left = ",left," right= ",right," mid = ",mid);
       if((javab[nummat][0][mid]!=infin)&&((mid==right)||(javab[nummat][0][mid+1]==infin))){
+       
         return mid;
       }
       if(javab[nummat][0][mid]==infin){
@@ -455,23 +577,30 @@ var numtest=139;
         left=mid+1;
       }
     }
+    
     return left;
+    
   }
   //writeln("findlast = ",findlast());
   var cross:[0..m] int;
   //function below is for computing the cross vertices and store them in "cross". Cross vertices are the first vertices we reach them in their row. Each row has exactly one cross vertex.
   proc cross_finder(leftgr,rightgr,topgr,bottomgr,breakout,mat_num){
+   // timer_crossfinder.start();
     
     if(rightgr-leftgr<breakout){
+    //  timer_crossfinder.stop();
       return;
     }
     if((leftgr>rightgr)){
+    //  timer_crossfinder.stop();
       return;
     }
     if((topgr>bottomgr)){
+     // timer_crossfinder.stop();
       return;
     }
     if(breakout<0){
+    //  timer_crossfinder.stop();
       return;
     }
     if topgr==bottomgr{
@@ -486,6 +615,7 @@ var numtest=139;
        // writeln("for kind 1:  ,leftgr= ",leftgr, " rightgr= ",rightgr,"  topgr = ",topgr, " ", "bottomgr= ",bottomgr, "  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col);
        // writeln("kind 1 : cross[",i,"]= ",leftgr);
       }
+     // timer_crossfinder.stop();
       return;
     }
     //Below case means that the matrix has only one row.
@@ -497,12 +627,14 @@ var numtest=139;
       //if(bottomgr==4 && javab[0][topgr][2*topgr+1]==8){
       //    writeln("for kind 3:  ,leftgr= ",leftgr," leftmat= ",leftmat, " rightgr= ",rightgr," rightmat =  ",rightmat,"  topgr = ",topgr, " topmat= ",topmat," ", "bottomgr= ",bottomgr, " bottommat= ",bottommat,"  number of breakout= ",breakout," mat_num= ",mat_num," number of col = ",num_of_col);
       //}
+     // timer_crossfinder.stop();
       return;
     }
   
     var topmat=0;
     var bottommat=n;
     if((bottomgr-topgr==1)&&(breakout>1)){
+     // timer_crossfinder.stop();i
       return;
     }
     //In different steps, we calculated different matrices. Now, from those matrices, we are finding the path. We should know that which matrix we should use in each step, and divide that to dgu and dgl. The line below is for doing this.
@@ -585,13 +717,21 @@ var numtest=139;
       writeln(); 
       //writeln();
     }*/
+  //  timer_crossfinder.stop();
     cobegin{
+      
       cross_finder(leftgr,dgu[leftgr][which+leftmat],topgr,midrow,which,mat_num-1);
       cross_finder(dgu[leftgr][which+leftmat],rightgr,midrow,bottomgr,breakout-which,mat_num-1);
     }
+    
   }
     //writeln("lastbre= ",lastbre);
-  cross_finder(0,javab[nummat][0][findlast()],0,m,findlast(),nummat);
+  timer_findlast.start();
+  var fff=findlast();
+  timer_findlast.stop();
+  timer_crossfinder.start();
+  cross_finder(0,javab[nummat][0][fff],0,m,fff,nummat);
+  timer_crossfinder.stop();
  /* for i in 0..m{
     writeln("cross of line ",i," is ",cross[i]);
   }*/
@@ -604,15 +744,134 @@ var numtest=139;
   //write(tes,"   ");
   //writeln(common);
   //lines below is for writing the LCS.
+  var ans:string;
   for i in 0..m-1{
     if(common[i]){
-      write(string1[i]);
+     // write(string1[i]);
+     ans="".join(ans,string1[i]);
     }
   }
-  //writeln();
-  var stend=datetime.now();
+  var u2:[0..ans.size-1] uint(8);
+  forall i in 0..ans.size-1{
+    u2[i]=ans.byte(i);
+  }
+  return(u2);
+  }
+ 
+  var number:[0..129][0..129] int;
+  var timing_parallel:[0..129][0..129] real;
+  var timing_sequential:[0..129][0..129] real;
+  //writeln(u2);
+  var tes=0;
+  label str while tes<=numtest{
+    
+    writeln("test number ",tes);
+//You can change the below lines to solve only some test cases.
+  //  if(tes%200 ==0){
+      //continue str;
+   // writeln(tes);
+   // }
+    var st=tes:string;
+    var fle="".join("newtest",st,".txt");
+
+  //writeln("The name of the file we are reading is ", fle);
+    var f = open(fle, ioMode.r);
+    var r = f.reader();
+  
+  
+   r.readLine(line);
+  var string1=line;
+  r.readLine(line);
+  var string2=line;
+  while( r.readLine(line) ) {
+  
+  }
+  //writeln(string1.size,string2.size);
+//  if((string1.size>1025)||(string2.size>1025)){
+//	continue;
+ // }
+//if ((string1.size<32)||(string2.size<32)){
+//	continue;
+//}
+  var u1:[0..string1.size-1]uint(8);
+  var u2:[0..string2.size-1] uint(8);
+  forall i in 0..string1.size-1{
+    u1[i]=string1.byte(i);
+  }
+  //writeln(u1);
+  forall i in 0..string2.size-1{
+    u2[i]=string2.byte(i);
+  }
+  var m1=u1.size;
+  var n1=u2.size;
+ // number[m1][n1]=number[m1][n1]+1;
+  var stend=dateTime.now();
+  
+  var timerseq:stopwatch;
+  var timerpar:stopwatch;
+  timer_computedg.reset();
+  timer_crossfinder.reset();
+  timer_findcell.reset();
+  timer_findcolmins.reset();
+  timer_findminindex.reset();
+  timer_prefsum.reset();
+  timer_findlast.reset();
+  timerpar.start();
+  paralcs(u1,u2);
+  timerpar.stop();
+  timerseq.start();
+  sequential(u1,u2);
+  
+  timerseq.stop();
+  //timing_parallel[m1][n1]+=timerpar.elapsed();
+  //wrt.writeln("test number ",tes," : ");
+  //wrt.writeln("tescase for m=",string1.size," and n = ",string2.size," :");
+  var t1=logBasePow2(u1.size,1);
+  var t2=logBasePow2(u2.size,1);
+  if(t1<t2){
+    var ee=t1;
+    t1=t2;
+    t2=ee;
+  }
+  number[t1][t2]+=1;
+  timing_parallel[t1][t2]+=timerpar.elapsed();
+  timing_sequential[t1][t2]+=timerseq.elapsed();
+ // wrt.writeln("the average time for the parallel program with using ",here.maxTaskPar," proceccors  is ",timerpar.elapsed());//," and ",timing_parallel/number[i][j]," for the parallel program");
+ // wrt.writeln("the average time for the sequential program  is ",timerseq.elapsed());//," and ",timing_parallel/number[i][j]," for the parallel program");  
+ // wrt.writeln("The ratio of the running tome of the parallel to the running time of the sequential is ",timerpar.elapsed()/timerseq.elapsed());
+  //wrt.writeln("time for computedg: ",timer_computedg.elapsed());
+ // wrt.writeln("time for crossfinder: ",timer_crossfinder.elapsed());
+ // wrt.writeln("time for findcell: ",timer_findcell.elapsed());
+ // wrt.writeln("time for findcolmins: ",timer_findcolmins.elapsed());
+ // wrt.writeln("time for findminindex: ",timer_findminindex.elapsed());
+  //wrt.writeln("timer for prefsum: ",timer_prefsum.elapsed());
+  //wrt.writeln("timer for findlast: ",timer_findlast.elapsed());
+ // wrt.writeln();
+ // wrt.writeln();
+ // wrt.writeln();
+ // var timer2:stopwatch;
+ // timer2.start();
+ // PeelLCS(u1,u2,reta);
+ // timer2.stop();
+ // timing_sequential[m1][n1]+=timer.elapsed();
+  f.close();
  // wrt.writeln(m-1," ",n-1," ",stend-stm);
 //wrt.close();
-//}
+tes+=1;
+}
+for i in 0..15{
+  for j in 0..i{
+    if(number[i][j]>0){
+      wrt.writeln("We had ",number[i][j]," test cases with log of lengths ",i," and ",j);
+      wrt.writeln("The average running time for the parallel algorithm was ",timing_parallel[i][j]/number[i][j]);
+      wrt.writeln("The average running time for the sequential algorithm was ",timing_sequential[i][j]/number[i][j]);
+      wrt.writeln("The ratio of running time of parallel alg to sequential algorithm was ",timing_parallel[i][j]/timing_sequential[i][j]);
+      wrt.writeln();
+      wrt.writeln();
+    }
+  }
+}
+      
+
 
 
