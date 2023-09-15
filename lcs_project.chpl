@@ -4,7 +4,7 @@ use Math;
 use Time;
 use CTypes;
 //below is number of testcases which can change. 
-var numtest=499;
+var numtest=600;
 var timer_prefsum:stopwatch;
 var timer_findminindex:stopwatch;
 var timer_findcolmins:stopwatch;
@@ -16,11 +16,11 @@ var timer_findlast:stopwatch;
 //below is number of available processors, and number of processors assigned to this program.
 writeln(here.numPUs());
 writeln(here.maxTaskPar);
-var res= open("results_499_8.txt", ioMode.cw);
+var res= open("168_8.txt", ioMode.cw);
 
 var wrt=res.writer();
-wrt.writeln("here.numPUs() is ",here.numPUs());
-wrt.writeln("here.maxTaslPar is ",here.maxTaskPar);
+//wrt.writeln("here.numPUs() is ",here.numPUs());
+//wrt.writeln("here.maxTaslPar is ",here.maxTaskPar);
 var reta:[0..100000] uint(8);
 
   
@@ -804,6 +804,17 @@ proc sequential(w,z){
   }
   var m1=u1.size;
   var n1=u2.size;
+if(m1>n1){
+var tttt=n1;
+n1=m1;
+m1=tttt;
+}
+//writeln(m1," ",n1);
+if((m1>17)||((n1!=1025)&&((n1!=2049)))){
+tes+=1;
+continue;
+}
+//writeln(m1," ",n1);
  // number[m1][n1]=number[m1][n1]+1;
   var stend=dateTime.now();
   
@@ -859,15 +870,17 @@ proc sequential(w,z){
 //wrt.close();
 tes+=1;
 }
-for i in 0..15{
+for i in 0..20{
   for j in 0..i{
     if(number[i][j]>0){
-      wrt.writeln("We had ",number[i][j]," test cases with log of lengths ",i," and ",j);
-      wrt.writeln("The average running time for the parallel algorithm was ",timing_parallel[i][j]/number[i][j]);
-      wrt.writeln("The average running time for the sequential algorithm was ",timing_sequential[i][j]/number[i][j]);
-      wrt.writeln("The ratio of running time of parallel alg to sequential algorithm was ",timing_parallel[i][j]/timing_sequential[i][j]);
-      wrt.writeln();
-      wrt.writeln();
+ //     wrt.writeln("We had ",number[i][j]," test cases with log of lengths ",i," and ",j);
+   //   wrt.writeln("The average running time for the parallel algorithm was ",timing_parallel[i][j]/number[i][j]);
+     // wrt.writeln("The average running time for the sequential algorithm was ",timing_sequential[i][j]/number[i][j]);
+      //wrt.writeln("The ratio of running time of parallel alg to sequential algorithm was ",timing_parallel[i][j]/timing_sequential[i][j]);
+
+      writeln(number[i][j]," ",i," ",j," ",timing_parallel[i][j]/number[i][j]," ",timing_sequential[i][j]/number[i][j]);
+      //wrt.writeln();
+      writeln();
     }
   }
 }
