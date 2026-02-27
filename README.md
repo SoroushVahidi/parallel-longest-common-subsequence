@@ -2,6 +2,10 @@
 
 A **Chapel** implementation of a **parallel algorithm** for the **longest common subsequence (LCS)** of two strings. The algorithm runs in **O(log^3 n)** time using **O(m n)** processors, where m and n are the lengths of the two strings (with n >= m).
 
+## Reference
+
+- **Paper (IEEE):** https://ieeexplore.ieee.org/abstract/document/10363472/
+
 ## What is in this repo
 
 - Chapel source code that takes two strings (e.g. string1 and string2) and computes their LCS.
@@ -21,4 +25,4 @@ A **Chapel** implementation of a **parallel algorithm** for the **longest common
 
 ## License
 
-See the LICENSE file in the repository. For academic use, please cite or acknowledge the repo.
+See the LICENSE file in the repository. For academic use, please cite the IEEE paper above and this repository.
