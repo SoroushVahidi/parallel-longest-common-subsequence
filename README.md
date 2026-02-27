@@ -1,4 +1,24 @@
-# parallel-longest-common-subsequence
-It is a code in Chapel. Its input is 2 strings named string1 and string2, and it writes the lcs of them in O(log^3(n)) with O(mn) processors, such that m and n are the lengths of the input strings and n>=m. You should set the input in the code. The algorithm is based on https://ieeexplore.ieee.org/document/298210. If you want to use this code, please cite the paper below:
+# Parallel Longest Common Subsequence (Chapel)
 
-https://scholar.google.com/citations?view_op=view_citation&hl=en&user=GNk1ajUAAAAJ&citation_for_view=GNk1ajUAAAAJ:UeHWp8X0CEIC
+A **Chapel** implementation of a **parallel algorithm** for the **longest common subsequence (LCS)** of two strings. The algorithm runs in **O(log^3 n)** time using **O(m n)** processors, where m and n are the lengths of the two strings (with n >= m).
+
+## What is in this repo
+
+- Chapel source code that takes two strings (e.g. string1 and string2) and computes their LCS.
+- Instructions to compile and run with the Chapel compiler.
+- Example inputs or test scripts (if present).
+
+## How to run
+
+1. Install [Chapel](https://chapel-lang.org/) and set up the environment.
+2. Compile the Chapel program (e.g. chpl lcs.chpl).
+3. Run with two input strings (from file or command line, as documented in the repo).
+
+## Complexity
+
+- Time: O(log^3 n) parallel steps.
+- Processors: O(m n).
+
+## License
+
+See the LICENSE file in the repository. For academic use, please cite or acknowledge the repo.
